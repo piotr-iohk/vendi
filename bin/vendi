@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'vendi'
+require 'docopt'
+
+doc = <<~DOCOPT
+  Vendi - CNFT Vending Machine.
+
+  Usage:
+    #{File.basename(__FILE__)} fill --collection <name> [--wallet-port <port>]
+    #{File.basename(__FILE__)} serve --collection <name> [--wallet-port <port>] [--logfile <file>]
+    #{File.basename(__FILE__)} -v | --version
+    #{File.basename(__FILE__)} -h | --help
+
+  Options:
+    fill                    Setup vending machine by filling it with exemplary set of NFT metadata
+                            and creating a source wallet for minging.
+    serve                   Start vending machine.
+    --collection <name>     Name of the collection.
+    --wallet-port <port>    Cardano-wallet port [default: 8090].
+    --logfile <file>        Logfile (will be rotated daily).
+
+    -v --version            Check #{File.basename(__FILE__)} version.
+    -h --help               This help.
+
+  Example:
+    Fill vending machine with exemplary NFT collection:
+
+      $ vendi fill --collection TestBudz
+
+    Now checkout $HOME/.vendi-nft-machine/TestBudz, refine configs as you prefer.
+    When ready start vending machine:
+
+      $ vendi serve --collection TestBudz
+
+DOCOPT
+
+begin
+  o = Docopt.docopt(doc)
+
+  warn Vendi::VERSION if o['--version']
+
+  if o['fill']
+    auction_name = o['--collection']
+    wallet_port = o['--wallet-port']
+    vendi = Vendi.init({ port: wallet_port.to_i })
+    begin
+      vendi.fill(auction_name)
+    rescue StandardError => e
+      vendi.logger.error e.message
+    rescue Interrupt
+      vendi.logger.info 'Vending machine filling stopped.'
+    end
+  end
+
+  if o['serve']
+    auction_name = o['--collection']
+    wallet_port = o['--wallet-port']
+    logfile = o['--logfile']
+    vendi = if logfile
+              Vendi.init({ port: wallet_port.to_i }, :info, logfile)
+            else
+              Vendi.init({ port: wallet_port.to_i })
+            end
+    begin
+      vendi.serve(auction_name)
+    rescue StandardError => e
+      vendi.logger.error e.message
+    rescue Interrupt
+      vendi.logger.info 'Vending machine stopped.'
+    end
+  end
+rescue Docopt::Exit => e
+  puts e.message
+end
