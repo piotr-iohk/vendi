@@ -1,0 +1,27 @@
+<div>
+  <center>
+    Send <b><%= price %></b> to <b><%= address %></b> and get back NFT from Vendi!
+  </center>
+  <br/>
+  <center>
+    Hurry up there are only <b><span id="in_stock"></span></b> NFTs left!
+  </center>
+  <br/>
+  <br/>
+</div>
+<div>
+  <embed src="<%= frontail_url %>" style="width:100%; height:700px;">
+</div>
+
+<script type="text/javascript">
+  function getNFTStock(){
+    $.get("/api/v0/stock/<%= network %>", function(data, status){
+        $('#in_stock').text(data.in_stock);
+      });
+  }
+  $(document).ready(function(){
+    getNFTStock();
+    setInterval(getNFTStock, 5000);
+  });
+
+</script>

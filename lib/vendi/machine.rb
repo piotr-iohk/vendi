@@ -55,7 +55,7 @@ module Vendi
       @logger.info('----------------')
       @logger.info("Check contents of #{collection_dir} and edit files as needed.")
       @logger.info('Before starting vending machine make sure your wallet is synced and has enough funds.')
-      @logger.info("To fund your wallet send ADA to: #{wallet_details[:wallet_address]}.")
+      @logger.info("To fund your wallet send ADA to: #{wallet_details[:wallet_address]}")
       @logger.info("❗ Write down your wallet mnemonics: #{mnemonics}.")
     end
 
