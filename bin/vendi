@@ -8,16 +8,18 @@ doc = <<~DOCOPT
   Vendi - CNFT Vending Machine.
 
   Usage:
-    #{File.basename(__FILE__)} fill --collection <name> [--wallet-port <port>]
+    #{File.basename(__FILE__)} fill --collection <name> --price <lovelace> --nft-count <int> [--wallet-port <port>]
     #{File.basename(__FILE__)} serve --collection <name> [--wallet-port <port>] [--logfile <file>]
     #{File.basename(__FILE__)} -v | --version
     #{File.basename(__FILE__)} -h | --help
 
   Options:
-    fill                    Setup vending machine by filling it with exemplary set of NFT metadata
-                            and creating a source wallet for minging.
+    fill                    Setup vending machine by filling it with exemplary set of NFT CIP-25 metadata
+                            and creating a source wallet for minting.
     serve                   Start vending machine.
     --collection <name>     Name of the collection.
+    --price <lovelace>      Single NFT price in lovelace.
+    --nft-count <int>       How many NFTs would you like to generate.
     --wallet-port <port>    Cardano-wallet port [default: 8090].
     --logfile <file>        Logfile (will be rotated daily).
 
@@ -27,9 +29,9 @@ doc = <<~DOCOPT
   Example:
     Fill vending machine with exemplary NFT collection:
 
-      $ vendi fill --collection TestBudz
+      $ vendi fill --collection TestBudz --price 10000000 --nft-count 100
 
-    Now checkout $HOME/.vendi-nft-machine/TestBudz, refine configs as you prefer.
+    Now check out $HOME/.vendi-nft-machine/TestBudz, refine configs as you prefer.
     When ready start vending machine:
 
       $ vendi serve --collection TestBudz
@@ -42,20 +44,33 @@ begin
   warn Vendi::VERSION if o['--version']
 
   if o['fill']
-    auction_name = o['--collection']
+    collection_name = o['--collection']
+    price = o['--price']
+    nft_count = o['--nft-count']
     wallet_port = o['--wallet-port']
     vendi = Vendi.init({ port: wallet_port.to_i })
     begin
-      vendi.fill(auction_name)
+      if File.directory?(File.join(vendi.config_dir, collection_name))
+        $stdout.print "Collection '#{collection_name}' already exists do you want to overwrite? (y/n): "
+        yn = $stdin.gets.chomp
+        if (yn == 'y' || yn == 'Y')
+          vendi.fill(collection_name, price, nft_count)
+        else
+          raise Interrupt
+        end
+      else
+        vendi.fill(collection_name, price, nft_count)
+      end
     rescue StandardError => e
       vendi.logger.error e.message
     rescue Interrupt
+      warn ''
       vendi.logger.info 'Vending machine filling stopped.'
     end
   end
 
   if o['serve']
-    auction_name = o['--collection']
+    collection_name = o['--collection']
     wallet_port = o['--wallet-port']
     logfile = o['--logfile']
     vendi = if logfile
@@ -64,7 +79,7 @@ begin
               Vendi.init({ port: wallet_port.to_i })
             end
     begin
-      vendi.serve(auction_name)
+      vendi.serve(collection_name)
     rescue StandardError => e
       vendi.logger.error e.message
     rescue Interrupt

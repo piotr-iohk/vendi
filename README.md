@@ -17,12 +17,13 @@ Note! It is a toy project... but... seems to work:)
 
 Fill vending machine with exemplary NFT collection:
 
-    $ vendi fill --collection TestBudz
+    $ vendi fill --collection TestBudz --price 10000000 --nft-count 100
 
-Now checkout `$HOME/.vendi-nft-machine/TestBudz`, refine configs as you prefer.
+Now check out `$HOME/.vendi-nft-machine/TestBudz`, refine configs as you prefer.
 When ready start vending machine:
 
     $ vendi serve --collection TestBudz
+
 
 
 ## Contributing

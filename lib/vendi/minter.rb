@@ -61,6 +61,15 @@ module Vendi
       [tx_constructed, tx_signed, tx_submitted]
     end
 
+    def outgoing_tx_ok?(tx_res)
+      tx_constructed, tx_signed, tx_submitted = tx_res
+      if tx_constructed.code == 202 && tx_signed.code == 202 && tx_submitted.code == 202
+        true
+      else
+        false
+      end
+    end
+
     def wait_for_tx_in_ledger(wid, tx_id)
       eventually "Tx #{tx_id} is in ledger" do
         @logger.info "Waiting for #{tx_id} to get in_ledger"
@@ -78,7 +87,9 @@ module Vendi
         sleep 5
         current_time = Time.now
       end
-      @logger.error "Action '#{label}' did not resolve within timeout: #{Vendi::TIMEOUT}s"
+      if current_time > timeout_treshold
+        @logger.error "Action '#{label}' did not resolve within timeout: #{Vendi::TIMEOUT}s"
+      end
     end
   end
 end

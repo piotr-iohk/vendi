@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Vendi
-  # Vending Machine: fill it and serve!
+  # Vending Machine: fill it with NFTs and serve to the hungry and in need!
   class Machine
     include Vendi::Utils
     include Vendi::Monitor
     include Vendi::Minter
 
-    attr_reader :logger, :cw
+    attr_reader :logger, :cw, :config_dir
 
     def initialize(wallet_opts = {}, log_level = :info, log_file = nil)
       @cw = CardanoWallet.new(wallet_opts)
@@ -31,7 +31,7 @@ module Vendi
 
     # Fill vending machine with exemplary set of CIP-25 metadata for minting,
     # set up basic config and create wallet for minting
-    def fill(collection_name)
+    def fill(collection_name, price, nft_count)
       collection_dir = File.join(@config_dir, collection_name)
       config_file = File.join(collection_dir, 'config.json')
       metadata_file = File.join(collection_dir, 'metadata.json')
@@ -40,19 +40,23 @@ module Vendi
       wallet_details = create_wallet("Vendi wallet - #{collection_name}")
 
       @logger.info("Generating your NFT collection config into #{config_file}.")
-      config = { price: 100_000_000 }
+      @logger.info("NFT price: #{as_ada(price.to_i)}.")
+      config = { price: price.to_i }
+      mnemonics = wallet_details[:wallet_mnemonics]
+      wallet_details.delete(:wallet_mnemonics)
       config.merge!(wallet_details)
       to_json(config_file, config)
 
       @logger.info("Generating exemplary CIP-25 metadata set into #{metadata_file}.")
-      metadatas = generate_metadata(collection_name)
+      metadatas = generate_metadata(collection_name, nft_count.to_i)
       to_json(metadata_file, metadatas)
 
-      @logger.info('NOTE! 👇')
+      @logger.info('IMPORTANT NOTES! 👇')
       @logger.info('----------------')
       @logger.info("Check contents of #{collection_dir} and edit files as needed.")
       @logger.info('Before starting vending machine make sure your wallet is synced and has enough funds.')
       @logger.info("To fund your wallet send ADA to: #{wallet_details[:wallet_address]}.")
+      @logger.info("❗ Write down your wallet mnemonics: #{mnemonics}.")
     end
 
     # Turn on vending machine and make it serve NFTs for anyone who dares to
@@ -76,7 +80,6 @@ module Vendi
       raise "Wallet #{wid} does not exist!" if wallet.code == 404
       raise "Wallet #{wid} is not synced (#{wallet['state']})!" if wallet['state']['status'] != 'ready'
       raise "Wallet #{wid} has no funds!" if (wallet['balance']['available']['quantity']).zero?
-      raise "#{metadata_vending_file} does not exist!" unless File.exist?(metadata_vending_file)
 
       @logger.info 'Vending machine started.'
       @logger.info "Wallet id: #{wid}"
@@ -94,7 +97,7 @@ module Vendi
         nfts = from_json(metadata_vending_file)
         nfts_sent = from_json(metadata_sent_file)
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
-        @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, Balance: #{as_ada(wallet_balance)}]"
+        @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
         # @logger.info "Wallet balance [Available: #{as_ada(wallet_balance)}]"
 
         txs_delta = get_incoming_txs(wid)
@@ -105,7 +108,7 @@ module Vendi
 
           txs_to_check.each do |t|
             @logger.info "Checking #{t['id']}"
-            if tx_correct?(t, address, price)
+            if incoming_tx_ok?(t, address, price)
               @logger.info 'OK! VENDING!'
               @logger.info '----------------'
               dest_addr = get_dest_addr(t, address)
@@ -114,18 +117,26 @@ module Vendi
               key = nfts.keys.sample
               metadata = prepare_metadata(nfts, key, policy_id)
               mint = mint_payload(asset_name(key.to_s), dest_addr)
-              @logger.debug metadata
-              @logger.debug mint
+              @logger.debug JSON.pretty_generate(metadata)
+              @logger.debug JSON.pretty_generate(mint)
 
               # mint
               @logger.info "Minting NFT: #{key} to #{dest_addr}"
               tx_res = construct_sign_submit(wid, pass, metadata, mint)
-              mint_tx_id = tx_res.last['id']
-              wait_for_tx_in_ledger(wid, mint_tx_id)
+              if outgoing_tx_ok?(tx_res)
+                mint_tx_id = tx_res.last['id']
+                wait_for_tx_in_ledger(wid, mint_tx_id)
+                # update metadata files
+                update_metadata_files(nfts, key, metadata_vending_file, metadata_sent_file)
+              else
+                @logger.error 'Minting tx failed!'
+                @logger.error "Construct tx: #{JSON.pretty_generate(tx_res[0])}"
+                @logger.error "Sign tx: #{JSON.pretty_generate(tx_res[1])}"
+                @logger.error "Submit tx: #{JSON.pretty_generate(tx_res[2])}"
+              end
               @logger.info '----------------'
 
-              # update metadata files
-              update_metadata_files(nfts, key, metadata_vending_file, metadata_sent_file)
+
             else
               @logger.warn "NO GOOD! NOT VENDING! Tx: #{t['id']}"
             end
@@ -134,15 +145,6 @@ module Vendi
           txs = txs_delta
         end
 
-        sleep 5
-      end
-      loop do
-        if get_stock.zero?
-          log 'THANKS!!!  stock = 0'
-          break
-        end
-
-        log "Txs: #{txs.size}"
         sleep 5
       end
       @logger.info 'Turning off! Vending machine empty!'
@@ -158,8 +160,8 @@ module Vendi
                                             mnemonic_sentence: wallet_mnemonics,
                                             passphrase: wallet_pass })
 
-      @logger.info('!!!!! Write down wallet mnemonics !!!!')
-      @logger.info(wallet_mnemonics.to_s)
+      @logger.debug('!!!!! Write down wallet mnemonics !!!!')
+      @logger.debug(wallet_mnemonics.to_s)
       wid = wallet['id']
       wallet_address = @cw.shelley.addresses.list(wid).first['id']
       wallet_policy_id = @cw.shelley.keys.create_policy_id(wid, 'cosigner#0')['policy_id']
@@ -167,10 +169,11 @@ module Vendi
         wallet_name: wallet_name,
         wallet_pass: wallet_pass,
         wallet_address: wallet_address,
-        wallet_policy_id: wallet_policy_id }
+        wallet_policy_id: wallet_policy_id,
+        wallet_mnemonics: wallet_mnemonics}
     end
 
-    def generate_metadata(nft_name_prefix, nft_count = 100)
+    def generate_metadata(nft_name_prefix, nft_count)
       metadata = {}
       1.upto nft_count do |i|
         nft_metadata = {
@@ -178,7 +181,7 @@ module Vendi
             'name' => "#{nft_name_prefix.upcase} No #{i}",
             'image' => 'ipfs://QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw',
             'Copyright' => "Vendi #{Time.now.year}",
-            'Collection' => "Collection #{Time.now.year}"
+            'Collection' => "#{nft_name_prefix} #{Time.now.year}"
           }
         }
         metadata.merge!(nft_metadata)
