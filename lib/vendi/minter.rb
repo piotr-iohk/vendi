@@ -28,17 +28,11 @@ module Vendi
       to_json(metadata_vending_file, nfts)
     end
 
-    ##
-    # encode string asset_name to hex representation
-    def asset_name(asset_name)
-      asset_name.unpack1('H*')
-    end
-
     # Build mint payload for construct tx
     def mint_payload(asset_name, address, quantity = 1)
       mint = { 'operation' => { 'mint' => { 'quantity' => quantity,
                                             'receiving_address' => address } },
-               'policy_script_template' => 'cosigner#0' }
+               'policy_script_template' => Vendi::POLICY_SCRIPT_TEMPLATE }
       mint['asset_name'] = asset_name unless asset_name.nil?
       [mint]
     end
@@ -75,20 +69,6 @@ module Vendi
         @logger.info "Waiting for #{tx_id} to get in_ledger"
         tx = @cw.shelley.transactions.get(wid, tx_id)
         tx.code == 200 && tx['status'] == 'in_ledger'
-      end
-    end
-
-    ##
-    # wait until action passed as &block returns true or TIMEOUT is reached
-    def eventually(label, &block)
-      current_time = Time.now
-      timeout_treshold = current_time + Vendi::TIMEOUT
-      while (block.call == false) && (current_time <= timeout_treshold)
-        sleep 5
-        current_time = Time.now
-      end
-      if current_time > timeout_treshold
-        @logger.error "Action '#{label}' did not resolve within timeout: #{Vendi::TIMEOUT}s"
       end
     end
   end

@@ -9,11 +9,10 @@ enable :sessions
 
 before do
   @vendi = Vendi.init
-  @vendi_config = @vendi.config_dir
-  @preview_config = JSON.parse File.read(File.join(@vendi_config, 'TestBudzPreview', 'config.json'))
-  @preview_metadata = JSON.parse File.read(File.join(@vendi_config, 'TestBudzPreview', 'metadata-vending.json'))
-  @preprod_config = JSON.parse File.read(File.join(@vendi_config, 'TestBudzPreprod', 'config.json'))
-  @preprod_metadata = JSON.parse File.read(File.join(@vendi_config, 'TestBudzPreprod', 'metadata-vending.json'))
+  @preview_config = @vendi.config_for('TestBudzPreview')
+  @preview_metadata = @vendi.metadata_vending_for('TestBudzPreview')
+  @preprod_config = @vendi.config_for('TestBudzPreprod')
+  @preprod_metadata = @vendi.metadata_vending_for('TestBudzPreprod')
 end
 
 get "/" do
@@ -22,8 +21,8 @@ end
 
 get "/preview" do
   frontail_url = 'http://localhost:9001/'
-  price = @vendi.as_ada(@preview_config['price'])
-  address = @preview_config['wallet_address']
+  price = @vendi.as_ada(@preview_config[:price])
+  address = @preview_config[:wallet_address]
   erb :demo, { :locals => { :frontail_url => frontail_url,
                             :price => price,
                             :address => address,
@@ -32,8 +31,8 @@ end
 
 get "/preprod" do
   frontail_url = 'http://localhost:9002/'
-  price = @vendi.as_ada(@preprod_config['price'])
-  address = @preprod_config['wallet_address']
+  price = @vendi.as_ada(@preprod_config[:price])
+  address = @preprod_config[:wallet_address]
   erb :demo, { :locals => { :frontail_url => frontail_url,
                             :price => price,
                             :address => address,

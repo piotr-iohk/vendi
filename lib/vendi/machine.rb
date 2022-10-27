@@ -29,31 +29,80 @@ module Vendi
       @config_dir = File.join(Dir.home, '.vendi-nft-machine')
     end
 
+    def collection_dir(collection_name)
+      File.join(@config_dir, collection_name)
+    end
+
+    def config_path(collection_name)
+      File.join(collection_dir(collection_name), 'config.json')
+    end
+
+    def metadata_path(collection_name)
+      File.join(collection_dir(collection_name), 'metadata.json')
+    end
+
+    def metadata_vending_path(collection_name)
+      File.join(collection_dir(collection_name), 'metadata-vending.json')
+    end
+
+    def metadata_sent_path(collection_name)
+      File.join(collection_dir(collection_name), 'metadata-sent.json')
+    end
+
+    def config_for(collection_name)
+      from_json(config_path(collection_name))
+    end
+
+    def metadata_vending_for(collection_name)
+      from_json(metadata_vending_path(collection_name))
+    end
+
+    def metadata_sent_for(collection_name)
+      from_json(metadata_sent_path(collection_name))
+    end
+
+    def metadata_for(collection_name)
+      from_json(metadata_path(collection_name))
+    end
+
+    def set_metadata_for(collection_name, metadata)
+      to_json(metadata_path(collection_name), metadata)
+    end
+
+    def set_metadata_sent_for(collection_name, metadata)
+      to_json(metadata_sent_path(collection_name), metadata)
+    end
+
+    def set_metadata_vending_for(collection_name, metadata)
+      to_json(metadata_vending_path(collection_name), metadata)
+    end
+
+    def set_config_for(collection_name, configuration)
+      to_json(config_path(collection_name), configuration)
+    end
+
     # Fill vending machine with exemplary set of CIP-25 metadata for minting,
     # set up basic config and create wallet for minting
     def fill(collection_name, price, nft_count)
-      collection_dir = File.join(@config_dir, collection_name)
-      config_file = File.join(collection_dir, 'config.json')
-      metadata_file = File.join(collection_dir, 'metadata.json')
-      FileUtils.mkdir_p(collection_dir)
+      FileUtils.mkdir_p(collection_dir(collection_name))
       @logger.info('Generating wallet for your collection.')
       wallet_details = create_wallet("Vendi wallet - #{collection_name}")
 
-      @logger.info("Generating your NFT collection config into #{config_file}.")
+      @logger.info("Generating your NFT collection config into #{config_path(collection_name)}.")
       @logger.info("NFT price: #{as_ada(price.to_i)}.")
       config = { price: price.to_i }
       mnemonics = wallet_details[:wallet_mnemonics]
       wallet_details.delete(:wallet_mnemonics)
       config.merge!(wallet_details)
-      to_json(config_file, config)
+      set_config_for(collection_name, config)
 
-      @logger.info("Generating exemplary CIP-25 metadata set into #{metadata_file}.")
+      @logger.info("Generating exemplary CIP-25 metadata set into #{metadata_path(collection_name)}.")
       metadatas = generate_metadata(collection_name, nft_count.to_i)
-      to_json(metadata_file, metadatas)
+      set_metadata_for(collection_name, metadatas)
 
       @logger.info('IMPORTANT NOTES! 👇')
       @logger.info('----------------')
-      @logger.info("Check contents of #{collection_dir} and edit files as needed.")
+      @logger.info("Check contents of #{collection_dir(collection_name)} and edit files as needed.")
       @logger.info('Before starting vending machine make sure your wallet is synced and has enough funds.')
       @logger.info("To fund your wallet send ADA to: #{wallet_details[:wallet_address]}")
       @logger.info("❗ Write down your wallet mnemonics: #{mnemonics}.")
@@ -62,14 +111,9 @@ module Vendi
     # Turn on vending machine and make it serve NFTs for anyone who dares to
     # pay the 'price' to the 'address', that is specified in the config_file
     def serve(collection_name)
-      collection_dir = File.join(@config_dir, collection_name)
-      config_file = File.join(collection_dir, 'config.json')
-      metadata_file = File.join(collection_dir, 'metadata.json')
-      metadata_vending_file = File.join(collection_dir, 'metadata-vending.json')
-      metadata_sent_file = File.join(collection_dir, 'metadata-sent.json')
-      to_json(metadata_sent_file, {}) unless File.exist?(metadata_sent_file)
+      set_metadata_sent_for(collection_name, {}) unless File.exist?(metadata_sent_path(collection_name))
 
-      c = from_json(config_file)
+      c = config_for(collection_name)
       wid = c[:wallet_id]
       pass = c[:wallet_pass]
       address = c[:wallet_address]
@@ -85,20 +129,19 @@ module Vendi
       @logger.info "Wallet id: #{wid}"
       @logger.info "Address: #{address}"
       @logger.info "NFT price: #{as_ada(price)}"
-      @logger.info "Original NFT stock: #{from_json(metadata_file).size}"
+      @logger.info "Original NFT stock: #{metadata_for(collection_name).size}"
       @logger.info '----------------'
-      unless File.exist?(metadata_vending_file)
-        @logger.info "Making copy of #{metadata_file} to #{metadata_vending_file}."
-        FileUtils.cp(metadata_file, metadata_vending_file)
+      unless File.exist?(metadata_vending_path(collection_name))
+        @logger.info "Making copy of #{metadata_path(collection_name)} to #{metadata_vending_path(collection_name)}."
+        FileUtils.cp(metadata_path(collection_name), metadata_vending_path(collection_name))
       end
 
       txs = get_incoming_txs(wid)
-      until from_json(metadata_vending_file).empty?
-        nfts = from_json(metadata_vending_file)
-        nfts_sent = from_json(metadata_sent_file)
+      until metadata_vending_for(collection_name).empty?
+        nfts = metadata_vending_for(collection_name)
+        nfts_sent = metadata_sent_for(collection_name)
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
         @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
-        # @logger.info "Wallet balance [Available: #{as_ada(wallet_balance)}]"
 
         txs_delta = get_incoming_txs(wid)
         if txs.size < txs_delta.size
@@ -127,7 +170,7 @@ module Vendi
                 mint_tx_id = tx_res.last['id']
                 wait_for_tx_in_ledger(wid, mint_tx_id)
                 # update metadata files
-                update_metadata_files(nfts, key, metadata_vending_file, metadata_sent_file)
+                update_metadata_files(nfts, key, metadata_vending_path(collection_name), metadata_sent_path(collection_name))
               else
                 @logger.error 'Minting tx failed!'
                 @logger.error "Construct tx: #{JSON.pretty_generate(tx_res[0])}"
@@ -164,7 +207,7 @@ module Vendi
       @logger.debug(wallet_mnemonics.to_s)
       wid = wallet['id']
       wallet_address = @cw.shelley.addresses.list(wid).first['id']
-      wallet_policy_id = @cw.shelley.keys.create_policy_id(wid, 'cosigner#0')['policy_id']
+      wallet_policy_id = @cw.shelley.keys.create_policy_id(wid, Vendi::POLICY_SCRIPT_TEMPLATE)['policy_id']
       { wallet_id: wallet['id'],
         wallet_name: wallet_name,
         wallet_pass: wallet_pass,
