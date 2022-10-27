@@ -3,9 +3,7 @@
 Vendi is simple CNFT vending machine based on [`cardano-wallet`](https://github.com/input-output-hk/cardano-wallet).
 You need to have `cardano-wallet` started and synced.
 
-> :information_source: Check out [cardano-up](https://github.com/piotr-iohk/cardano-up) for spinning up `cardano-wallet` quickly.
-
-Note! It is a toy project but... seems to work, check the [Demo](https://github.com/piotr-iohk/vendi/tree/master/demo). :)
+It... seems to work, check out the [Demo](https://github.com/piotr-iohk/vendi/tree/master/demo). :)
 
 ## Installation
 

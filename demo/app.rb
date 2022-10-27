@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'vendi'
 
@@ -9,37 +11,37 @@ enable :sessions
 
 before do
   @vendi = Vendi.init
-  @preview_config = @vendi.config_for('TestBudzPreview')
-  @preview_metadata = @vendi.metadata_vending_for('TestBudzPreview')
-  @preprod_config = @vendi.config_for('TestBudzPreprod')
-  @preprod_metadata = @vendi.metadata_vending_for('TestBudzPreprod')
+  @preview_config = @vendi.config('TestBudzPreview')
+  @preview_metadata = @vendi.metadata_vending('TestBudzPreview')
+  @preprod_config = @vendi.config('TestBudzPreprod')
+  @preprod_metadata = @vendi.metadata_vending('TestBudzPreprod')
 end
 
-get "/" do
+get '/' do
   erb :index
 end
 
-get "/preview" do
+get '/preview' do
   frontail_url = 'http://localhost:9001/'
   price = @vendi.as_ada(@preview_config[:price])
   address = @preview_config[:wallet_address]
-  erb :demo, { :locals => { :frontail_url => frontail_url,
-                            :price => price,
-                            :address => address,
-                            :network => 'preview' } }
+  erb :demo, { locals: { frontail_url: frontail_url,
+                         price: price,
+                         address: address,
+                         network: 'preview' } }
 end
 
-get "/preprod" do
+get '/preprod' do
   frontail_url = 'http://localhost:9002/'
   price = @vendi.as_ada(@preprod_config[:price])
   address = @preprod_config[:wallet_address]
-  erb :demo, { :locals => { :frontail_url => frontail_url,
-                            :price => price,
-                            :address => address,
-                            :network => 'preprod' } }
+  erb :demo, { locals: { frontail_url: frontail_url,
+                         price: price,
+                         address: address,
+                         network: 'preprod' } }
 end
 
-get "/api/v0/stock/:network" do
+get '/api/v0/stock/:network' do
   content_type :json
   network = params[:network]
 
@@ -49,5 +51,5 @@ get "/api/v0/stock/:network" do
             @preprod_metadata.size
           end
 
-  {"in_stock" => stock}.to_json
+  { 'in_stock' => stock }.to_json
 end

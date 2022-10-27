@@ -57,11 +57,7 @@ module Vendi
 
     def outgoing_tx_ok?(tx_res)
       tx_constructed, tx_signed, tx_submitted = tx_res
-      if tx_constructed.code == 202 && tx_signed.code == 202 && tx_submitted.code == 202
-        true
-      else
-        false
-      end
+      tx_constructed.code == 202 && tx_signed.code == 202 && tx_submitted.code == 202
     end
 
     def wait_for_tx_in_ledger(wid, tx_id)

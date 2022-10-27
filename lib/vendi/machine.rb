@@ -49,35 +49,35 @@ module Vendi
       File.join(collection_dir(collection_name), 'metadata-sent.json')
     end
 
-    def config_for(collection_name)
+    def config(collection_name)
       from_json(config_path(collection_name))
     end
 
-    def metadata_vending_for(collection_name)
+    def metadata_vending(collection_name)
       from_json(metadata_vending_path(collection_name))
     end
 
-    def metadata_sent_for(collection_name)
+    def metadata_sent(collection_name)
       from_json(metadata_sent_path(collection_name))
     end
 
-    def metadata_for(collection_name)
+    def metadata(collection_name)
       from_json(metadata_path(collection_name))
     end
 
-    def set_metadata_for(collection_name, metadata)
+    def set_metadata(collection_name, metadata)
       to_json(metadata_path(collection_name), metadata)
     end
 
-    def set_metadata_sent_for(collection_name, metadata)
+    def set_metadata_sent(collection_name, metadata)
       to_json(metadata_sent_path(collection_name), metadata)
     end
 
-    def set_metadata_vending_for(collection_name, metadata)
+    def set_metadata_vending(collection_name, metadata)
       to_json(metadata_vending_path(collection_name), metadata)
     end
 
-    def set_config_for(collection_name, configuration)
+    def set_config(collection_name, configuration)
       to_json(config_path(collection_name), configuration)
     end
 
@@ -94,11 +94,11 @@ module Vendi
       mnemonics = wallet_details[:wallet_mnemonics]
       wallet_details.delete(:wallet_mnemonics)
       config.merge!(wallet_details)
-      set_config_for(collection_name, config)
+      set_config(collection_name, config)
 
       @logger.info("Generating exemplary CIP-25 metadata set into #{metadata_path(collection_name)}.")
       metadatas = generate_metadata(collection_name, nft_count.to_i)
-      set_metadata_for(collection_name, metadatas)
+      set_metadata(collection_name, metadatas)
 
       @logger.info('IMPORTANT NOTES! 👇')
       @logger.info('----------------')
@@ -111,9 +111,9 @@ module Vendi
     # Turn on vending machine and make it serve NFTs for anyone who dares to
     # pay the 'price' to the 'address', that is specified in the config_file
     def serve(collection_name)
-      set_metadata_sent_for(collection_name, {}) unless File.exist?(metadata_sent_path(collection_name))
+      set_metadata_sent(collection_name, {}) unless File.exist?(metadata_sent_path(collection_name))
 
-      c = config_for(collection_name)
+      c = config(collection_name)
       wid = c[:wallet_id]
       pass = c[:wallet_pass]
       address = c[:wallet_address]
@@ -129,7 +129,7 @@ module Vendi
       @logger.info "Wallet id: #{wid}"
       @logger.info "Address: #{address}"
       @logger.info "NFT price: #{as_ada(price)}"
-      @logger.info "Original NFT stock: #{metadata_for(collection_name).size}"
+      @logger.info "Original NFT stock: #{metadata(collection_name).size}"
       @logger.info '----------------'
       unless File.exist?(metadata_vending_path(collection_name))
         @logger.info "Making copy of #{metadata_path(collection_name)} to #{metadata_vending_path(collection_name)}."
@@ -137,9 +137,9 @@ module Vendi
       end
 
       txs = get_incoming_txs(wid)
-      until metadata_vending_for(collection_name).empty?
-        nfts = metadata_vending_for(collection_name)
-        nfts_sent = metadata_sent_for(collection_name)
+      until metadata_vending(collection_name).empty?
+        nfts = metadata_vending(collection_name)
+        nfts_sent = metadata_sent(collection_name)
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
         @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
 
@@ -179,7 +179,6 @@ module Vendi
               end
               @logger.info '----------------'
 
-
             else
               @logger.warn "NO GOOD! NOT VENDING! Tx: #{t['id']}"
             end
@@ -213,7 +212,7 @@ module Vendi
         wallet_pass: wallet_pass,
         wallet_address: wallet_address,
         wallet_policy_id: wallet_policy_id,
-        wallet_mnemonics: wallet_mnemonics}
+        wallet_mnemonics: wallet_mnemonics }
     end
 
     def generate_metadata(nft_name_prefix, nft_count)

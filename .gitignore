@@ -11,5 +11,6 @@
 .rspec_status
 
 *.log
+*.log.2*
 *.lock
 *.gem

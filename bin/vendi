@@ -53,14 +53,9 @@ begin
       if File.directory?(File.join(vendi.config_dir, collection_name))
         $stdout.print "Collection '#{collection_name}' already exists do you want to overwrite? (y/n): "
         yn = $stdin.gets.chomp
-        if (yn == 'y' || yn == 'Y')
-          vendi.fill(collection_name, price, nft_count)
-        else
-          raise Interrupt
-        end
-      else
-        vendi.fill(collection_name, price, nft_count)
+        raise Interrupt unless %w[y Y].include?(yn)
       end
+      vendi.fill(collection_name, price, nft_count)
     rescue StandardError => e
       vendi.logger.error e.message
     rescue Interrupt
