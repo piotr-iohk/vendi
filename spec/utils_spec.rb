@@ -2,7 +2,7 @@
 
 RSpec.describe Vendi::Utils do
   before(:all) do
-    @v = Vendi.init
+    @v = set_vendi
   end
 
   it 'as_ada' do

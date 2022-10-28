@@ -2,6 +2,7 @@
 
 require 'bundler/setup'
 require 'vendi'
+require 'tmpdir'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -13,4 +14,10 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+end
+
+def set_vendi
+  v = Vendi.init({}, :error)
+  v.config_dir = Dir.mktmpdir
+  v
 end

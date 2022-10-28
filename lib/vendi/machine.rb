@@ -7,7 +7,8 @@ module Vendi
     include Vendi::Monitor
     include Vendi::Minter
 
-    attr_reader :logger, :cw, :config_dir
+    attr_reader :logger, :cw
+    attr_accessor :config_dir
 
     def initialize(wallet_opts = {}, log_level = :info, log_file = nil)
       @cw = CardanoWallet.new(wallet_opts)
@@ -83,10 +84,20 @@ module Vendi
 
     # Fill vending machine with exemplary set of CIP-25 metadata for minting,
     # set up basic config and create wallet for minting
-    def fill(collection_name, price, nft_count)
+    def fill(collection_name, price, nft_count, skip_wallet: false)
       FileUtils.mkdir_p(collection_dir(collection_name))
-      @logger.info('Generating wallet for your collection.')
-      wallet_details = create_wallet("Vendi wallet - #{collection_name}")
+      if skip_wallet
+        @logger.info('Skipping wallet generation for your collection.')
+        wallet_details = { wallet_id: '',
+                           wallet_name: '',
+                           wallet_pass: '',
+                           wallet_address: '',
+                           wallet_policy_id: '',
+                           wallet_mnemonics: '' }
+      else
+        @logger.info('Generating wallet for your collection.')
+        wallet_details = create_wallet("Vendi wallet - #{collection_name}")
+      end
 
       @logger.info("Generating your NFT collection config into #{config_path(collection_name)}.")
       @logger.info("NFT price: #{as_ada(price.to_i)}.")
@@ -143,9 +154,9 @@ module Vendi
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
         @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
 
-        txs_delta = get_incoming_txs(wid)
-        if txs.size < txs_delta.size
-          txs_to_check = txs_delta[0..(txs_delta.size - txs.size - 1)]
+        txs_new = get_incoming_txs(wid)
+        if txs.size < txs_new.size
+          txs_to_check = get_transactions_to_process(tx_delta, txs)
           @logger.info "New txs arrived: #{txs_to_check.size}"
           @logger.info (txs_to_check.map { |t| t['id'] }).to_s
 
@@ -184,7 +195,7 @@ module Vendi
             end
           end
 
-          txs = txs_delta
+          txs = txs_new
         end
 
         sleep 5

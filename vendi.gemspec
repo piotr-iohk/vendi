@@ -27,5 +27,9 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'cardano_wallet', '~> 0.3.28'
   spec.add_runtime_dependency 'docopt', '~> 0.6.1'
+
+  spec.add_development_dependency 'rake', '12.3.3'
+  spec.add_development_dependency 'rspec', '3.11.0'
+
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

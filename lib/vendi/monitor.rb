@@ -7,9 +7,8 @@ module Vendi
       @cw.shelley.transactions.list(wid).select { |t| t['direction'] == 'incoming' }
     end
 
-    def get_transactions_to_process(txs_delta, txs)
-      old_tx_ids = txs.map { |t| t['id'] }
-      txs_delta.reject { |t| old_tx_ids.include?(t['id']) }
+    def get_transactions_to_process(txs_new, txs)
+      txs_new[0..(txs_new.size - txs.size - 1)]
     end
 
     # incoming tx is correct when the address is on any of the outputs (means that someone was sending to it)

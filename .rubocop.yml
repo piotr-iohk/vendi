@@ -35,3 +35,13 @@ Lint/OrAssignmentToConstant:
 
 Layout/LineLength:
   Enabled: false
+
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+  EnforcedShorthandSyntax: either
+
+Naming/VariableNumber:
+  CheckSymbols: false
+
+Metrics/BlockNesting:
+  Enabled: false
