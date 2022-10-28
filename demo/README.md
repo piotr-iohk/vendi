@@ -1,6 +1,6 @@
 # Vendi Demo
 
-Vendi demo is available at http://localhost:4321.
+Vendi demo is available [HERE](http://185.201.114.10:4321).
 
 ## How it was done
 

@@ -8,7 +8,7 @@ doc = <<~DOCOPT
   Vendi - CNFT Vending Machine.
 
   Usage:
-    #{File.basename(__FILE__)} fill --collection <name> --price <lovelace> --nft-count <int> [--wallet-port <port>]
+    #{File.basename(__FILE__)} fill --collection <name> --price <lovelace> --nft-count <int> [--wallet-port <port>] [--skip-wallet-creation]
     #{File.basename(__FILE__)} serve --collection <name> [--wallet-port <port>] [--logfile <file>]
     #{File.basename(__FILE__)} -v | --version
     #{File.basename(__FILE__)} -h | --help
@@ -40,7 +40,6 @@ DOCOPT
 
 begin
   o = Docopt.docopt(doc)
-
   warn Vendi::VERSION if o['--version']
 
   if o['fill']
@@ -48,6 +47,7 @@ begin
     price = o['--price']
     nft_count = o['--nft-count']
     wallet_port = o['--wallet-port']
+    skip_wallet = o['--skip-wallet-creation']
     vendi = Vendi.init({ port: wallet_port.to_i })
     begin
       if File.directory?(File.join(vendi.config_dir, collection_name))
@@ -55,7 +55,11 @@ begin
         yn = $stdin.gets.chomp
         raise Interrupt unless %w[y Y].include?(yn)
       end
-      vendi.fill(collection_name, price, nft_count)
+      if skip_wallet
+        vendi.fill(collection_name, price, nft_count, skip_wallet: true)
+      else
+        vendi.fill(collection_name, price, nft_count)
+      end
     rescue StandardError => e
       vendi.logger.error e.message
     rescue Interrupt
