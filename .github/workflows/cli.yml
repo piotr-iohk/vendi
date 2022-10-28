@@ -1,0 +1,31 @@
+name: Cli
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: '📥 Checkout repository'
+      uses: actions/checkout@v3
+
+    - name: 💎 Set up Ruby
+      uses: ruby/setup-ruby@0a29871fe2b0200a17a4497bae54fe5df0d973aa # v1.115.3
+      with:
+        ruby-version: '2.7'
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+    - name: 🧪 CLI sanity
+      run: |
+        bin/rebuild
+        vendi -v
+        vendi -h
+        vendi
