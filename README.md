@@ -1,9 +1,14 @@
 # Vendi
 
+[![Gem Version](https://badge.fury.io/rb/vendi.svg)](https://badge.fury.io/rb/vendi)
+
+## Overview
+
 Vendi is simple CNFT vending machine based on [`cardano-wallet`](https://github.com/input-output-hk/cardano-wallet).
 You need to have `cardano-wallet` started and synced.
 
-It... seems to work, check out the [Demo](https://github.com/piotr-iohk/vendi/tree/master/demo). :)
+It... seems to work, check out the 
+  👉 **[Demo](http://185.201.114.10:4321)** 👈 and [how it was done](https://github.com/piotr-iohk/vendi/tree/master/demo#how-it-was-done).
 
 ## Installation
 
