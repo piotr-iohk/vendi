@@ -75,6 +75,11 @@ begin
             end
     begin
       vendi.serve(collection_name)
+    rescue Errno::ECONNREFUSED => e
+      # retry if cannot connect to cardano-wallet
+      vendi.logger.error e.message
+      sleep 5
+      retry
     rescue StandardError => e
       vendi.logger.error e.message
     rescue Interrupt
