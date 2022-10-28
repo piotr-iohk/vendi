@@ -156,7 +156,7 @@ module Vendi
 
         txs_new = get_incoming_txs(wid)
         if txs.size < txs_new.size
-          txs_to_check = get_transactions_to_process(tx_delta, txs)
+          txs_to_check = get_transactions_to_process(txs_new, txs)
           @logger.info "New txs arrived: #{txs_to_check.size}"
           @logger.info (txs_to_check.map { |t| t['id'] }).to_s
 
