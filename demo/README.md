@@ -23,11 +23,11 @@ We waited few minutes until our wallets synced and started our vending machines:
     $ vendi serve --collection TestBudzPreview --wallet-port 8090 --logfile preview.log
     $ vendi serve --collection TestBudzPreprod --wallet-port 8091 --logfile preprod.log
 
-We wanted our logs to be available on our frontend for the demo. For that we used [frontail](https://github.com/mthenw/frontail). Very cool!
+We wanted our logs to be available on our demo frontend. For that we used [frontail](https://github.com/mthenw/frontail). Very cool!
 
     $ frontail -p 9001 preview.log
     $ frontail -p 9002 preprod.log
 
 Finally we have started our demo frontend from this folder! :tada:
 
-    $ ruby demo.rb
+    $ HOST=<our_ip> ruby demo.rb
