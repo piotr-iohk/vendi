@@ -27,9 +27,11 @@ get '/preview' do
   frontail_url = "http://#{ENV['HOST']}:9001/"
   price = @vendi.as_ada(@preview_config[:price])
   address = @preview_config[:wallet_address]
+  policy_id = @preview_config[:wallet_policy_id]
   erb :demo, { locals: { frontail_url: frontail_url,
                          price: price,
                          address: address,
+                         policy_id: policy_id,
                          network: 'preview' } }
 end
 
@@ -37,9 +39,11 @@ get '/preprod' do
   frontail_url = "http://#{ENV['HOST']}:9002/"
   price = @vendi.as_ada(@preprod_config[:price])
   address = @preprod_config[:wallet_address]
+  policy_id = @preprod_config[:wallet_policy_id]
   erb :demo, { locals: { frontail_url: frontail_url,
                          price: price,
                          address: address,
+                         policy_id: policy_id,
                          network: 'preprod' } }
 end
 
