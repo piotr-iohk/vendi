@@ -24,7 +24,7 @@ get '/' do
 end
 
 get '/preview' do
-  frontail_url = "http://#{ENV['HOST']}:9001/"
+  frontail_url = "http://#{ENV.fetch('HOST', nil)}:9001/"
   price = @vendi.as_ada(@preview_config[:price])
   address = @preview_config[:wallet_address]
   policy_id = @preview_config[:wallet_policy_id]
@@ -36,7 +36,7 @@ get '/preview' do
 end
 
 get '/preprod' do
-  frontail_url = "http://#{ENV['HOST']}:9002/"
+  frontail_url = "http://#{ENV.fetch('HOST', nil)}:9002/"
   price = @vendi.as_ada(@preprod_config[:price])
   address = @preprod_config[:wallet_address]
   policy_id = @preprod_config[:wallet_policy_id]
