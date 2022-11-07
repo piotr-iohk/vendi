@@ -17,13 +17,17 @@ module Vendi
       nfts.keys.sample(to_mint)
     end
 
+    ##
+    # get metadata for keys to be minted
     def metadatas(keys, collection_name)
       nfts = metadata_vending(collection_name)
-      keys.map do |key|
+      keys.to_h do |key|
         [key, nfts[key]]
-      end.to_h
+      end
     end
 
+    ##
+    # prepare metadata for minting
     def prepare_metadata(keys, collection_name, policy_id)
       {
         '721' => {
@@ -32,6 +36,8 @@ module Vendi
       }
     end
 
+    ##
+    # update metadata files after minting
     def update_metadata_files(keys, collection_name)
       metadata_vending_file = metadata_vending_path(collection_name)
       metadata_sent_file = metadata_sent_path(collection_name)
@@ -56,15 +62,13 @@ module Vendi
     def mint_payload(keys, address, quantity = 1)
       keys.map do |key|
         { 'operation' => { 'mint' => { 'quantity' => quantity,
-                                       'receiving_address' => address }
-                                     },
+                                       'receiving_address' => address } },
           'policy_script_template' => Vendi::POLICY_SCRIPT_TEMPLATE,
-          'asset_name' => asset_name(key.to_s)
-        }
+          'asset_name' => asset_name(key.to_s) }
       end
     end
 
-    # Construct -> Sign -> Submit
+    # Construct -> Sign -> Submit transaction
     def construct_sign_submit(wid, pass, metadata, mint_payload)
       tx_constructed = @cw.shelley.transactions.construct(wid,
                                                           nil,
@@ -82,11 +86,29 @@ module Vendi
       [tx_constructed, tx_signed, tx_submitted]
     end
 
+    # Mint NFT 
+    def mint_nft(collection_name, tx_amt, vend_max, dest_address)
+      c = config(collection_name)
+      wid = c[:wallet_id]
+      pass = c[:wallet_pass]
+      policy_id = c[:policy_id]
+      price = c[:price]
+      keys = keys_to_mint(tx_amt, price, vend_max, collection_name)
+      @logger.info "Minting #{keys.size} NFT(s): #{keys} to #{dest_addr}"
+      metadata = prepare_metadata(keys, collection_name, policy_id)
+      mint_payload = mint_payload(keys, dest_address, 1)
+      construct_sign_submit(wid, pass, metadata, mint_payload)
+    end
+
+    ##
+    # check if NFT mint transaction is successful 
     def outgoing_tx_ok?(tx_res)
       tx_constructed, tx_signed, tx_submitted = tx_res
       tx_constructed.code == 202 && tx_signed.code == 202 && tx_submitted.code == 202
     end
-
+    
+    ##
+    # wait for NFT to be minted
     def wait_for_tx_in_ledger(wid, tx_id)
       eventually "Tx #{tx_id} is in ledger" do
         @logger.info "Waiting for #{tx_id} to get in_ledger"

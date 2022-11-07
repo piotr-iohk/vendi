@@ -88,7 +88,7 @@ module Vendi
       FileUtils.mkdir_p(collection_dir(collection_name))
       if skip_wallet
         @logger.info('Skipping wallet generation for your collection.')
-        wallet_details = if File.exists?(config_path(collection_name))
+        wallet_details = if File.exist?(config_path(collection_name))
                            c = config(collection_name)
                            c.delete(:price)
                            c
@@ -176,17 +176,7 @@ module Vendi
               @logger.info 'OK! VENDING!'
               @logger.info '----------------'
               dest_addr = get_dest_addr(t, address)
-
-              # prepare metadata and mint payload
-              keys = keys_to_mint(t['amount']['quantity'], price, vend_max, collection_name)
-              metadata = prepare_metadata(keys, collection_name, policy_id)
-              mint = mint_payload(keys, dest_addr)
-              @logger.debug JSON.pretty_generate(metadata)
-              @logger.debug JSON.pretty_generate(mint)
-
-              # mint
-              @logger.info "Minting #{keys.size} NFT(s): #{keys} to #{dest_addr}"
-              tx_res = construct_sign_submit(wid, pass, metadata, mint)
+              tx_res = mint_nft(collection_name, t['amount']['quantity'], vend_max, dest_addr)
               if outgoing_tx_ok?(tx_res)
                 mint_tx_id = tx_res.last['id']
                 wait_for_tx_in_ledger(wid, mint_tx_id)
