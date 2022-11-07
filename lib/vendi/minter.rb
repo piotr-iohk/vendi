@@ -58,6 +58,19 @@ module Vendi
       to_json(metadata_vending_file, nfts)
     end
 
+    ##
+    # update failed mints
+    def update_failed_mints(collection_name, tx_id, reason, keys)
+      failed_mints_file = failed_mints_path(collection_name)
+      if File.exist? failed_mints_file
+        failed_mints = from_json(failed_mints_file)
+        failed_mints[tx_id] = [reason, keys]
+        to_json(failed_mints_file, failed_mints)
+      else
+        to_json(failed_mints_file, tx_id => [reason, keys])
+      end
+    end
+
     # Build mint payload for construct tx
     def mint_payload(keys, address, quantity = 1)
       keys.map do |key|
@@ -86,7 +99,7 @@ module Vendi
       [tx_constructed, tx_signed, tx_submitted]
     end
 
-    # Mint NFT 
+    # Mint NFT
     def mint_nft(collection_name, tx_amt, vend_max, dest_address)
       c = config(collection_name)
       wid = c[:wallet_id]
@@ -94,19 +107,20 @@ module Vendi
       policy_id = c[:policy_id]
       price = c[:price]
       keys = keys_to_mint(tx_amt, price, vend_max, collection_name)
-      @logger.info "Minting #{keys.size} NFT(s): #{keys} to #{dest_addr}"
+      @logger.info "Minting #{keys.size} NFT(s): #{keys} to #{dest_address}"
       metadata = prepare_metadata(keys, collection_name, policy_id)
       mint_payload = mint_payload(keys, dest_address, 1)
-      construct_sign_submit(wid, pass, metadata, mint_payload)
+      tx_res = construct_sign_submit(wid, pass, metadata, mint_payload)
+      { keys: keys, tx_res: tx_res }
     end
 
     ##
-    # check if NFT mint transaction is successful 
+    # check if NFT mint transaction is successful
     def outgoing_tx_ok?(tx_res)
       tx_constructed, tx_signed, tx_submitted = tx_res
       tx_constructed.code == 202 && tx_signed.code == 202 && tx_submitted.code == 202
     end
-    
+
     ##
     # wait for NFT to be minted
     def wait_for_tx_in_ledger(wid, tx_id)

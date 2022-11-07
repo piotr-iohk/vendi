@@ -78,4 +78,15 @@ RSpec.describe Vendi::Minter do
     keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
     expect(keys.size).to eq 5
   end
+
+  it 'update_failed_mints' do
+    coll = 'TestBudzFailedMints'
+    price = 10_000_000
+    @v.fill(coll, price, 10, skip_wallet: true)
+
+    @v.update_failed_mints(coll, 'tx_id1', 'reason', 'keys')
+    expect(@v.failed_mints(coll).size).to eq 1
+    @v.update_failed_mints(coll, 'tx_id2', 'reason', 'keys')
+    expect(@v.failed_mints(coll).size).to eq 2
+  end
 end

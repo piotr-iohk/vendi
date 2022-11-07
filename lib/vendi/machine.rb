@@ -50,16 +50,32 @@ module Vendi
       File.join(collection_dir(collection_name), 'metadata-sent.json')
     end
 
+    def failed_mints_path(collection_name)
+      File.join(collection_dir(collection_name), 'failed-mints.json')
+    end
+
     def config(collection_name)
       from_json(config_path(collection_name))
+    end
+
+    def set_config(collection_name, configuration)
+      to_json(config_path(collection_name), configuration)
     end
 
     def metadata_vending(collection_name)
       from_json(metadata_vending_path(collection_name))
     end
 
+    def set_metadata_vending(collection_name, metadata)
+      to_json(metadata_vending_path(collection_name), metadata)
+    end
+
     def metadata_sent(collection_name)
       from_json(metadata_sent_path(collection_name))
+    end
+
+    def set_metadata_sent(collection_name, metadata)
+      to_json(metadata_sent_path(collection_name), metadata)
     end
 
     def metadata(collection_name)
@@ -70,16 +86,12 @@ module Vendi
       to_json(metadata_path(collection_name), metadata)
     end
 
-    def set_metadata_sent(collection_name, metadata)
-      to_json(metadata_sent_path(collection_name), metadata)
+    def failed_mints(collection_name)
+      from_json(failed_mints_path(collection_name))
     end
 
-    def set_metadata_vending(collection_name, metadata)
-      to_json(metadata_vending_path(collection_name), metadata)
-    end
-
-    def set_config(collection_name, configuration)
-      to_json(config_path(collection_name), configuration)
+    def set_failed_mints(collection_name, failed_mints)
+      to_json(failed_mints_path(collection_name), failed_mints)
     end
 
     # Fill vending machine with exemplary set of CIP-25 metadata for minting,
@@ -118,6 +130,7 @@ module Vendi
       set_metadata(collection_name, metadatas)
       set_metadata_vending(collection_name, metadatas)
       set_metadata_sent(collection_name, {})
+      set_failed_mints(collection_name, {})
 
       @logger.info('IMPORTANT NOTES! 👇')
       @logger.info('----------------')
@@ -134,7 +147,6 @@ module Vendi
 
       c = config(collection_name)
       wid = c[:wallet_id]
-      pass = c[:wallet_pass]
       address = c[:wallet_address]
       policy_id = c[:wallet_policy_id]
       price = c[:price]
@@ -176,7 +188,9 @@ module Vendi
               @logger.info 'OK! VENDING!'
               @logger.info '----------------'
               dest_addr = get_dest_addr(t, address)
-              tx_res = mint_nft(collection_name, t['amount']['quantity'], vend_max, dest_addr)
+              minted = mint_nft(collection_name, t['amount']['quantity'], vend_max, dest_addr)
+              tx_res = minted[:tx_res]
+              keys = minted[:keys]
               if outgoing_tx_ok?(tx_res)
                 mint_tx_id = tx_res.last['id']
                 wait_for_tx_in_ledger(wid, mint_tx_id)
@@ -187,11 +201,21 @@ module Vendi
                 @logger.error "Construct tx: #{JSON.pretty_generate(tx_res[0])}"
                 @logger.error "Sign tx: #{JSON.pretty_generate(tx_res[1])}"
                 @logger.error "Submit tx: #{JSON.pretty_generate(tx_res[2])}"
+                @logger.warn "Updating #{failed_mints_path(collection_name)} file."
+                update_failed_mints(collection_name, t['id'], tx_res, keys)
               end
               @logger.info '----------------'
 
             else
-              @logger.warn "NO GOOD! NOT VENDING! Tx: #{t['id']}"
+              amt = t['amount']['quantity']
+              @logger.warn "NOT VENDING! Amt: #{as_ada(amt)}, Tx: #{t['id']}"
+              @logger.warn "Updating #{failed_mints_path(collection_name)} file."
+              reason = if amt.to_i < price.to_i
+                         "wrong_amount = #{as_ada(amt)}"
+                       else
+                         "wrong_address = #{address} was not in incoming tx outputs"
+                       end
+              update_failed_mints(collection_name, t['id'], reason, keys)
             end
           end
 
