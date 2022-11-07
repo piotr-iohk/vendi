@@ -3,19 +3,40 @@
 module Vendi
   # helper methods for minting NFT
   module Minter
-    def prepare_metadata(nfts, key, policy_id)
+    ##
+    # encode string asset_name to hex representation
+    def asset_name(asset_name)
+      asset_name.unpack1('H*')
+    end
+
+    ##
+    # get list of keys of metadata to be minted
+    def keys_to_mint(tx_amt, price, vend_max, collection_name)
+      nfts = metadata_vending(collection_name)
+      to_mint = (tx_amt / price) > vend_max.to_i ? vend_max.to_i : (tx_amt / price)
+      nfts.keys.sample(to_mint)
+    end
+
+    def metadatas(keys, collection_name)
+      nfts = metadata_vending(collection_name)
+      keys.map do |key|
+        [key, nfts[key]]
+      end.to_h
+    end
+
+    def prepare_metadata(keys, collection_name, policy_id)
       {
         '721' => {
-          policy_id => {
-            key => nfts[key]
-          }
+          policy_id => metadatas(keys, collection_name)
         }
       }
     end
 
-    def update_metadata_files(nfts, key, metadata_vending_file, metadata_sent_file)
+    def update_metadata_files(keys, collection_name)
+      metadata_vending_file = metadata_vending_path(collection_name)
+      metadata_sent_file = metadata_sent_path(collection_name)
       # metadata sent
-      m = { key => nfts[key] }
+      m = metadatas(keys, collection_name)
       if File.exist? metadata_sent_file
         sent = from_json(metadata_sent_file)
         sent.merge!(m)
@@ -24,17 +45,23 @@ module Vendi
         to_json(metadata_sent_file, m)
       end
       # metadata available
-      nfts.delete(key)
+      nfts = metadata_vending(collection_name)
+      keys.each do |key|
+        nfts.delete(key)
+      end
       to_json(metadata_vending_file, nfts)
     end
 
     # Build mint payload for construct tx
-    def mint_payload(asset_name, address, quantity = 1)
-      mint = { 'operation' => { 'mint' => { 'quantity' => quantity,
-                                            'receiving_address' => address } },
-               'policy_script_template' => Vendi::POLICY_SCRIPT_TEMPLATE }
-      mint['asset_name'] = asset_name unless asset_name.nil?
-      [mint]
+    def mint_payload(keys, address, quantity = 1)
+      keys.map do |key|
+        { 'operation' => { 'mint' => { 'quantity' => quantity,
+                                       'receiving_address' => address }
+                                     },
+          'policy_script_template' => Vendi::POLICY_SCRIPT_TEMPLATE,
+          'asset_name' => asset_name(key.to_s)
+        }
+      end
     end
 
     # Construct -> Sign -> Submit

@@ -14,7 +14,9 @@ module Vendi
     # incoming tx is correct when the address is on any of the outputs (means that someone was sending to it)
     # and tx amount is >= price set in the config
     def incoming_tx_ok?(tx, address, price)
-      (tx['outputs'].any? { |o| (o['address'] == address) }) && (tx['amount']['quantity'] >= price)
+      (tx['outputs'].any? { |o| (o['address'] == address) }) &&
+        (tx['amount']['quantity'] >= price) &&
+        (tx['direction'] == 'incoming')
     end
 
     # trying to naively get address to send back NFT, take first address from the output that isn't our address
