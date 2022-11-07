@@ -50,6 +50,32 @@ RSpec.describe Vendi::Minter do
     expect(metadata2.to_s).to include('TestBudz_7')
     expect(metadata2.to_s).to include('TestBudz_5')
     expect(metadata2.to_s).to include('policy_id')
+  end
 
+  it 'keys_to_mint' do
+    coll = 'TestBudzKeysToMint'
+    price = 10_000_000
+    vend_max = 5
+    @v.fill(coll, price, 10, skip_wallet: true)
+
+    tx_amt = 10_000_000
+    keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
+    expect(keys.size).to eq 1
+
+    tx_amt = 19_000_000
+    keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
+    expect(keys.size).to eq 1
+
+    tx_amt = 20_000_000
+    keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
+    expect(keys.size).to eq 2
+
+    tx_amt = 50_000_000
+    keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
+    expect(keys.size).to eq 5
+
+    tx_amt = 500_000_000
+    keys = @v.keys_to_mint(tx_amt, price, vend_max, coll)
+    expect(keys.size).to eq 5
   end
 end
