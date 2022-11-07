@@ -35,7 +35,7 @@ jobs:
     - name: '🔨 Build'
       run: |
         gem install yard
-        readme_link=https://github.com/piotr-iohk/cardano-up/blob/${{ steps.versions.outputs.version }}/README.md
+        readme_link=https://github.com/piotr-iohk/vendi/blob/${{ steps.versions.outputs.version }}/README.md
         yard doc --title "Documentation for Vendi (${{ steps.versions.outputs.version }})"
         sed -i "s|<a href=\"index.html\" title=\"README\">|<a href=\"$readme_link\" title=\"README\">|" ./doc/_index.html
         cp ./doc/_index.html ./doc/index.html
