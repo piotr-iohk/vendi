@@ -1,6 +1,7 @@
 # Vendi
 
 [![Gem Version](https://badge.fury.io/rb/vendi.svg)](https://badge.fury.io/rb/vendi)
+[![Tests](https://github.com/piotr-iohk/vendi/actions/workflows/tests.yml/badge.svg)](https://github.com/piotr-iohk/vendi/actions/workflows/tests.yml)
 
 ## Overview
 
@@ -26,6 +27,11 @@ Now check out `$HOME/.vendi-nft-machine/TestBudz`, refine configs as you prefer.
 When ready start vending machine:
 
     $ vendi serve --collection TestBudz
+
+## Documentation
+| Link | Description  |
+|--|--|
+|  [Ruby API](https://piotr-iohk.github.io/vendi/master/) | Rubydoc for `master` |
 
 
 
