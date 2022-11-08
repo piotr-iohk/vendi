@@ -50,16 +50,32 @@ module Vendi
       File.join(collection_dir(collection_name), 'metadata-sent.json')
     end
 
+    def failed_mints_path(collection_name)
+      File.join(collection_dir(collection_name), 'failed-mints.json')
+    end
+
     def config(collection_name)
       from_json(config_path(collection_name))
+    end
+
+    def set_config(collection_name, configuration)
+      to_json(config_path(collection_name), configuration)
     end
 
     def metadata_vending(collection_name)
       from_json(metadata_vending_path(collection_name))
     end
 
+    def set_metadata_vending(collection_name, metadata)
+      to_json(metadata_vending_path(collection_name), metadata)
+    end
+
     def metadata_sent(collection_name)
       from_json(metadata_sent_path(collection_name))
+    end
+
+    def set_metadata_sent(collection_name, metadata)
+      to_json(metadata_sent_path(collection_name), metadata)
     end
 
     def metadata(collection_name)
@@ -70,16 +86,12 @@ module Vendi
       to_json(metadata_path(collection_name), metadata)
     end
 
-    def set_metadata_sent(collection_name, metadata)
-      to_json(metadata_sent_path(collection_name), metadata)
+    def failed_mints(collection_name)
+      from_json(failed_mints_path(collection_name))
     end
 
-    def set_metadata_vending(collection_name, metadata)
-      to_json(metadata_vending_path(collection_name), metadata)
-    end
-
-    def set_config(collection_name, configuration)
-      to_json(config_path(collection_name), configuration)
+    def set_failed_mints(collection_name, failed_mints)
+      to_json(failed_mints_path(collection_name), failed_mints)
     end
 
     # Fill vending machine with exemplary set of CIP-25 metadata for minting,
@@ -88,12 +100,18 @@ module Vendi
       FileUtils.mkdir_p(collection_dir(collection_name))
       if skip_wallet
         @logger.info('Skipping wallet generation for your collection.')
-        wallet_details = { wallet_id: '',
-                           wallet_name: '',
-                           wallet_pass: '',
-                           wallet_address: '',
-                           wallet_policy_id: '',
-                           wallet_mnemonics: '' }
+        wallet_details = if File.exist?(config_path(collection_name))
+                           c = config(collection_name)
+                           c.delete(:price)
+                           c
+                         else
+                           { wallet_id: '',
+                             wallet_name: '',
+                             wallet_pass: '',
+                             wallet_address: '',
+                             wallet_policy_id: '',
+                             wallet_mnemonics: '' }
+                         end
       else
         @logger.info('Generating wallet for your collection.')
         wallet_details = create_wallet("Vendi wallet - #{collection_name}")
@@ -110,6 +128,9 @@ module Vendi
       @logger.info("Generating exemplary CIP-25 metadata set into #{metadata_path(collection_name)}.")
       metadatas = generate_metadata(collection_name, nft_count.to_i)
       set_metadata(collection_name, metadatas)
+      set_metadata_vending(collection_name, metadatas)
+      set_metadata_sent(collection_name, {})
+      set_failed_mints(collection_name, {})
 
       @logger.info('IMPORTANT NOTES! 👇')
       @logger.info('----------------')
@@ -121,12 +142,11 @@ module Vendi
 
     # Turn on vending machine and make it serve NFTs for anyone who dares to
     # pay the 'price' to the 'address', that is specified in the config_file
-    def serve(collection_name)
+    def serve(collection_name, vend_max = 1)
       set_metadata_sent(collection_name, {}) unless File.exist?(metadata_sent_path(collection_name))
 
       c = config(collection_name)
       wid = c[:wallet_id]
-      pass = c[:wallet_pass]
       address = c[:wallet_address]
       policy_id = c[:wallet_policy_id]
       price = c[:price]
@@ -138,8 +158,10 @@ module Vendi
 
       @logger.info 'Vending machine started.'
       @logger.info "Wallet id: #{wid}"
+      @logger.info "Policy id: #{policy_id}"
       @logger.info "Address: #{address}"
       @logger.info "NFT price: #{as_ada(price)}"
+      @logger.info "Vend max NFTs: #{vend_max}"
       @logger.info "Original NFT stock: #{metadata(collection_name).size}"
       @logger.info '----------------'
       unless File.exist?(metadata_vending_path(collection_name))
@@ -152,7 +174,12 @@ module Vendi
         nfts = metadata_vending(collection_name)
         nfts_sent = metadata_sent(collection_name)
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
-        @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
+        @logger.info "[In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Vend max: #{vend_max}, Balance: #{as_ada(wallet_balance)}]"
+        n = @cw.misc.network.information
+        unless n['sync_progress']['status'] == 'ready'
+          @logger.error "Network is not synced (#{n['sync_progress']['status']} #{n['sync_progress']['progress']['quantity']}%), waiting..."
+          sleep 5
+        end
 
         txs_new = get_incoming_txs(wid)
         if txs.size < txs_new.size
@@ -166,32 +193,34 @@ module Vendi
               @logger.info 'OK! VENDING!'
               @logger.info '----------------'
               dest_addr = get_dest_addr(t, address)
-
-              # prepare metadata and mint payload
-              key = nfts.keys.sample
-              metadata = prepare_metadata(nfts, key, policy_id)
-              mint = mint_payload(asset_name(key.to_s), dest_addr)
-              @logger.debug JSON.pretty_generate(metadata)
-              @logger.debug JSON.pretty_generate(mint)
-
-              # mint
-              @logger.info "Minting NFT: #{key} to #{dest_addr}"
-              tx_res = construct_sign_submit(wid, pass, metadata, mint)
+              minted = mint_nft(collection_name, t['amount']['quantity'], vend_max, dest_addr)
+              tx_res = minted[:tx_res]
+              keys = minted[:keys]
               if outgoing_tx_ok?(tx_res)
                 mint_tx_id = tx_res.last['id']
                 wait_for_tx_in_ledger(wid, mint_tx_id)
                 # update metadata files
-                update_metadata_files(nfts, key, metadata_vending_path(collection_name), metadata_sent_path(collection_name))
+                update_metadata_files(keys, collection_name)
               else
                 @logger.error 'Minting tx failed!'
                 @logger.error "Construct tx: #{JSON.pretty_generate(tx_res[0])}"
                 @logger.error "Sign tx: #{JSON.pretty_generate(tx_res[1])}"
                 @logger.error "Submit tx: #{JSON.pretty_generate(tx_res[2])}"
+                @logger.warn "Updating #{failed_mints_path(collection_name)} file."
+                update_failed_mints(collection_name, t['id'], tx_res, keys)
               end
               @logger.info '----------------'
 
             else
-              @logger.warn "NO GOOD! NOT VENDING! Tx: #{t['id']}"
+              amt = t['amount']['quantity']
+              @logger.warn "NOT VENDING! Amt: #{as_ada(amt)}, Tx: #{t['id']}"
+              @logger.warn "Updating #{failed_mints_path(collection_name)} file."
+              reason = if amt.to_i < price.to_i
+                         "wrong_amount = #{as_ada(amt)}"
+                       else
+                         "wrong_address = #{address} was not in incoming tx outputs"
+                       end
+              update_failed_mints(collection_name, t['id'], reason, keys)
             end
           end
 

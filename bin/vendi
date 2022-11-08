@@ -8,8 +8,8 @@ doc = <<~DOCOPT
   Vendi - CNFT Vending Machine.
 
   Usage:
-    #{File.basename(__FILE__)} fill --collection <name> --price <lovelace> --nft-count <int> [--wallet-port <port>] [--skip-wallet-creation]
-    #{File.basename(__FILE__)} serve --collection <name> [--wallet-port <port>] [--logfile <file>]
+    #{File.basename(__FILE__)} fill --collection <name> --price <lovelace> --nft-count <int> [--wallet-port <port>] [--skip-wallet]
+    #{File.basename(__FILE__)} serve --collection <name> [--vend-max <int>] [--wallet-port <port>] [--logfile <file>]
     #{File.basename(__FILE__)} -v | --version
     #{File.basename(__FILE__)} -h | --help
 
@@ -19,9 +19,11 @@ doc = <<~DOCOPT
     serve                   Start vending machine.
     --collection <name>     Name of the collection.
     --price <lovelace>      Single NFT price in lovelace.
+    --vend-max <int>        Max number of NFTs vended in single transaction [default: 1].
     --nft-count <int>       How many NFTs would you like to generate.
     --wallet-port <port>    Cardano-wallet port [default: 8090].
     --logfile <file>        Logfile (will be rotated daily).
+    --skip-wallet           Skip creation of wallet when filling vending machine.
 
     -v --version            Check #{File.basename(__FILE__)} version.
     -h --help               This help.
@@ -47,7 +49,7 @@ begin
     price = o['--price']
     nft_count = o['--nft-count']
     wallet_port = o['--wallet-port']
-    skip_wallet = o['--skip-wallet-creation']
+    skip_wallet = o['--skip-wallet']
     vendi = Vendi.init({ port: wallet_port.to_i })
     begin
       if File.directory?(File.join(vendi.config_dir, collection_name))
@@ -72,13 +74,14 @@ begin
     collection_name = o['--collection']
     wallet_port = o['--wallet-port']
     logfile = o['--logfile']
+    vend_max = o['--vend-max']
     vendi = if logfile
               Vendi.init({ port: wallet_port.to_i }, :info, logfile)
             else
               Vendi.init({ port: wallet_port.to_i })
             end
     begin
-      vendi.serve(collection_name)
+      vendi.serve(collection_name, vend_max)
     rescue Errno::ECONNREFUSED => e
       # retry if cannot connect to cardano-wallet
       vendi.logger.error e.message

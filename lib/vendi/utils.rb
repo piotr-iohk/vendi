@@ -44,11 +44,5 @@ module Vendi
         true
       end
     end
-
-    ##
-    # encode string asset_name to hex representation
-    def asset_name(asset_name)
-      asset_name.unpack1('H*')
-    end
   end
 end
