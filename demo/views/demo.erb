@@ -3,8 +3,16 @@
     <h3><%= network.capitalize %></h3>
   </center>
   <center>
-    Send <b><%= price %></b> to <b><%= address %></b> and get back NFT from Vendi!
+    Send <b><%= @vendi.as_ada(price) %></b> to <b><%= address %></b> and get NFT back from Vendi!
   </center>
+  <center>
+    Now you can get even up to <b>5</b> NFTs at once!
+  </center>
+  <% 1.upto 5 do |i|%>
+  <center>
+    Send <b><%= @vendi.as_ada(price * i) %></b> to get <b><%= i %></b>  NFT<%= 's' if i != 1 %> back. 
+  </center>
+  <% end %>
   <br/>
   <center>
     Policy id: <a target="_blank" href="https://<%= network %>.cexplorer.io/policy/<%= policy_id %>"><%= policy_id %></a>.
