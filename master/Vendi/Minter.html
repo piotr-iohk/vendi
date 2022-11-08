@@ -117,6 +117,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#asset_name-instance_method" title="#asset_name (instance method)">#<strong>asset_name</strong>(asset_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>encode string asset_name to hex representation.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#construct_sign_submit-instance_method" title="#construct_sign_submit (instance method)">#<strong>construct_sign_submit</strong>(wid, pass, metadata, mint_payload)  &#x21d2; Object </a>
     
 
@@ -132,7 +156,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Construct -&gt; Sign -&gt; Submit.</p>
+<p>Construct -&gt; Sign -&gt; Submit transaction.</p>
 </div></span>
   
 </li>
@@ -141,7 +165,79 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#mint_payload-instance_method" title="#mint_payload (instance method)">#<strong>mint_payload</strong>(asset_name, address, quantity = 1)  &#x21d2; Object </a>
+      <a href="#keys_to_mint-instance_method" title="#keys_to_mint (instance method)">#<strong>keys_to_mint</strong>(tx_amt, price, vend_max, collection_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>get list of keys of metadata to be minted.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#metadatas-instance_method" title="#metadatas (instance method)">#<strong>metadatas</strong>(keys, collection_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>get metadata for keys to be minted.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mint_nft-instance_method" title="#mint_nft (instance method)">#<strong>mint_nft</strong>(collection_name, tx_amt, vend_max, dest_address)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Mint NFT.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#mint_payload-instance_method" title="#mint_payload (instance method)">#<strong>mint_payload</strong>(keys, address, quantity = 1)  &#x21d2; Object </a>
     
 
     
@@ -179,7 +275,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>check if NFT mint transaction is successful.</p>
+</div></span>
   
 </li>
 
@@ -187,7 +285,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#prepare_metadata-instance_method" title="#prepare_metadata (instance method)">#<strong>prepare_metadata</strong>(nfts, key, policy_id)  &#x21d2; Object </a>
+      <a href="#prepare_metadata-instance_method" title="#prepare_metadata (instance method)">#<strong>prepare_metadata</strong>(keys, collection_name, policy_id)  &#x21d2; Object </a>
     
 
     
@@ -201,7 +299,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>prepare metadata for minting.</p>
+</div></span>
   
 </li>
 
@@ -209,7 +309,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#update_metadata_files-instance_method" title="#update_metadata_files (instance method)">#<strong>update_metadata_files</strong>(nfts, key, metadata_vending_file, metadata_sent_file)  &#x21d2; Object </a>
+      <a href="#update_failed_mints-instance_method" title="#update_failed_mints (instance method)">#<strong>update_failed_mints</strong>(collection_name, tx_id, reason, keys)  &#x21d2; Object </a>
     
 
     
@@ -223,7 +323,33 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>update failed mints.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#update_metadata_files-instance_method" title="#update_metadata_files (instance method)">#<strong>update_metadata_files</strong>(keys, collection_name)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>update metadata files after minting.</p>
+</div></span>
   
 </li>
 
@@ -245,7 +371,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>wait for NFT to be minted.</p>
+</div></span>
   
 </li>
 
@@ -260,7 +388,48 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="construct_sign_submit-instance_method">
+  <h3 class="signature first" id="asset_name-instance_method">
+  
+    #<strong>asset_name</strong>(asset_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>encode string asset_name to hex representation</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+8
+9
+10</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 8</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_asset_name'>asset_name</span><span class='lparen'>(</span><span class='id identifier rubyid_asset_name'>asset_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_asset_name'>asset_name</span><span class='period'>.</span><span class='id identifier rubyid_unpack1'>unpack1</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>H*</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="construct_sign_submit-instance_method">
   
     #<strong>construct_sign_submit</strong>(wid, pass, metadata, mint_payload)  &#x21d2; <tt>Object</tt> 
   
@@ -271,7 +440,438 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Construct -&gt; Sign -&gt; Submit</p>
+<p>Construct -&gt; Sign -&gt; Submit transaction</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 85</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_construct_sign_submit'>construct_sign_submit</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_pass'>pass</span><span class='comma'>,</span> <span class='id identifier rubyid_metadata'>metadata</span><span class='comma'>,</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_construct'>construct</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span>
+                                                      <span class='kw'>nil</span><span class='comma'>,</span>
+                                                      <span class='kw'>nil</span><span class='comma'>,</span>
+                                                      <span class='id identifier rubyid_metadata'>metadata</span><span class='comma'>,</span>
+                                                      <span class='kw'>nil</span><span class='comma'>,</span>
+                                                      <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='comma'>,</span>
+                                                      <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='comment'># puts tx_constructed.request.options[:body]
+</span>  <span class='id identifier rubyid_tx_signed'>tx_signed</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_pass'>pass</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>transaction</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='comment'># puts tx_signed
+</span>  <span class='id identifier rubyid_tx_submitted'>tx_submitted</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_submit'>submit</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>transaction</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='comment'># puts tx_submitted
+</span>
+  <span class='lbracket'>[</span><span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="keys_to_mint-instance_method">
+  
+    #<strong>keys_to_mint</strong>(tx_amt, price, vend_max, collection_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>get list of keys of metadata to be minted</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+14
+15
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 14</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_keys_to_mint'>keys_to_mint</span><span class='lparen'>(</span><span class='id identifier rubyid_tx_amt'>tx_amt</span><span class='comma'>,</span> <span class='id identifier rubyid_price'>price</span><span class='comma'>,</span> <span class='id identifier rubyid_vend_max'>vend_max</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_nfts'>nfts</span> <span class='op'>=</span> <span class='id identifier rubyid_metadata_vending'>metadata_vending</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_to_mint'>to_mint</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_tx_amt'>tx_amt</span> <span class='op'>/</span> <span class='id identifier rubyid_price'>price</span><span class='rparen'>)</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_vend_max'>vend_max</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>?</span> <span class='id identifier rubyid_vend_max'>vend_max</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>:</span> <span class='lparen'>(</span><span class='id identifier rubyid_tx_amt'>tx_amt</span> <span class='op'>/</span> <span class='id identifier rubyid_price'>price</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_nfts'>nfts</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_sample'>sample</span><span class='lparen'>(</span><span class='id identifier rubyid_to_mint'>to_mint</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="metadatas-instance_method">
+  
+    #<strong>metadatas</strong>(keys, collection_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>get metadata for keys to be minted</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+22
+23
+24
+25
+26
+27</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 22</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_metadatas'>metadatas</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_nfts'>nfts</span> <span class='op'>=</span> <span class='id identifier rubyid_metadata_vending'>metadata_vending</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
+    <span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_nfts'>nfts</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="mint_nft-instance_method">
+  
+    #<strong>mint_nft</strong>(collection_name, tx_amt, vend_max, dest_address)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Mint NFT</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 103</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mint_nft'>mint_nft</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_amt'>tx_amt</span><span class='comma'>,</span> <span class='id identifier rubyid_vend_max'>vend_max</span><span class='comma'>,</span> <span class='id identifier rubyid_dest_address'>dest_address</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_wid'>wid</span> <span class='op'>=</span> <span class='id identifier rubyid_c'>c</span><span class='lbracket'>[</span><span class='symbol'>:wallet_id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_pass'>pass</span> <span class='op'>=</span> <span class='id identifier rubyid_c'>c</span><span class='lbracket'>[</span><span class='symbol'>:wallet_pass</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_policy_id'>policy_id</span> <span class='op'>=</span> <span class='id identifier rubyid_c'>c</span><span class='lbracket'>[</span><span class='symbol'>:wallet_policy_id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_price'>price</span> <span class='op'>=</span> <span class='id identifier rubyid_c'>c</span><span class='lbracket'>[</span><span class='symbol'>:price</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_keys'>keys</span> <span class='op'>=</span> <span class='id identifier rubyid_keys_to_mint'>keys_to_mint</span><span class='lparen'>(</span><span class='id identifier rubyid_tx_amt'>tx_amt</span><span class='comma'>,</span> <span class='id identifier rubyid_price'>price</span><span class='comma'>,</span> <span class='id identifier rubyid_vend_max'>vend_max</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='ivar'>@logger</span><span class='period'>.</span><span class='id identifier rubyid_info'>info</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Minting </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='embexpr_end'>}</span><span class='tstring_content'> NFT(s): </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_keys'>keys</span><span class='embexpr_end'>}</span><span class='tstring_content'> to </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_dest_address'>dest_address</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_metadata'>metadata</span> <span class='op'>=</span> <span class='id identifier rubyid_prepare_metadata'>prepare_metadata</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='comma'>,</span> <span class='id identifier rubyid_policy_id'>policy_id</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_mint_payload'>mint_payload</span> <span class='op'>=</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_dest_address'>dest_address</span><span class='comma'>,</span> <span class='int'>1</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_tx_res'>tx_res</span> <span class='op'>=</span> <span class='id identifier rubyid_construct_sign_submit'>construct_sign_submit</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_pass'>pass</span><span class='comma'>,</span> <span class='id identifier rubyid_metadata'>metadata</span><span class='comma'>,</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='rparen'>)</span>
+  <span class='lbrace'>{</span> <span class='label'>keys:</span> <span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='label'>tx_res:</span> <span class='id identifier rubyid_tx_res'>tx_res</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="mint_payload-instance_method">
+  
+    #<strong>mint_payload</strong>(keys, address, quantity = 1)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Build mint payload for construct tx</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77
+78
+79
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 75</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_quantity'>quantity</span> <span class='op'>=</span> <span class='int'>1</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
+    <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>operation</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mint</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>quantity</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_quantity'>quantity</span><span class='comma'>,</span>
+                                   <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>receiving_address</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_address'>address</span> <span class='rbrace'>}</span> <span class='rbrace'>}</span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>policy_script_template</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'><span class='object_link'><a href="../Vendi.html" title="Vendi (module)">Vendi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Vendi.html#POLICY_SCRIPT_TEMPLATE-constant" title="Vendi::POLICY_SCRIPT_TEMPLATE (constant)">POLICY_SCRIPT_TEMPLATE</a></span></span><span class='comma'>,</span>
+      <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>asset_name</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_asset_name'>asset_name</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="outgoing_tx_ok?-instance_method">
+  
+    #<strong>outgoing_tx_ok?</strong>(tx_res)  &#x21d2; <tt>Boolean</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>check if NFT mint transaction is successful</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+119
+120
+121
+122</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 119</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_outgoing_tx_ok?'>outgoing_tx_ok?</span><span class='lparen'>(</span><span class='id identifier rubyid_tx_res'>tx_res</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span> <span class='op'>=</span> <span class='id identifier rubyid_tx_res'>tx_res</span>
+  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="prepare_metadata-instance_method">
+  
+    #<strong>prepare_metadata</strong>(keys, collection_name, policy_id)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>prepare metadata for minting</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33
+34
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 31</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_prepare_metadata'>prepare_metadata</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='comma'>,</span> <span class='id identifier rubyid_policy_id'>policy_id</span><span class='rparen'>)</span>
+  <span class='lbrace'>{</span>
+    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>721</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span>
+      <span class='id identifier rubyid_policy_id'>policy_id</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_metadatas'>metadatas</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+    <span class='rbrace'>}</span>
+  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_failed_mints-instance_method">
+  
+    #<strong>update_failed_mints</strong>(collection_name, tx_id, reason, keys)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>update failed mints</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 63</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_update_failed_mints'>update_failed_mints</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_id'>tx_id</span><span class='comma'>,</span> <span class='id identifier rubyid_reason'>reason</span><span class='comma'>,</span> <span class='id identifier rubyid_keys'>keys</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_failed_mints_file'>failed_mints_file</span> <span class='op'>=</span> <span class='id identifier rubyid_failed_mints_path'>failed_mints_path</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span> <span class='id identifier rubyid_failed_mints_file'>failed_mints_file</span>
+    <span class='id identifier rubyid_failed_mints'>failed_mints</span> <span class='op'>=</span> <span class='id identifier rubyid_from_json'>from_json</span><span class='lparen'>(</span><span class='id identifier rubyid_failed_mints_file'>failed_mints_file</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_failed_mints'>failed_mints</span><span class='lbracket'>[</span><span class='id identifier rubyid_tx_id'>tx_id</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reason'>reason</span><span class='comma'>,</span> <span class='id identifier rubyid_keys'>keys</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='id identifier rubyid_failed_mints_file'>failed_mints_file</span><span class='comma'>,</span> <span class='id identifier rubyid_failed_mints'>failed_mints</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='id identifier rubyid_failed_mints_file'>failed_mints_file</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_id'>tx_id</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_reason'>reason</span><span class='comma'>,</span> <span class='id identifier rubyid_keys'>keys</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="update_metadata_files-instance_method">
+  
+    #<strong>update_metadata_files</strong>(keys, collection_name)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>update metadata files after minting</p>
 
 
   </div>
@@ -300,213 +900,19 @@
 53
 54
 55
-56</pre>
+56
+57
+58
+59</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 41</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_construct_sign_submit'>construct_sign_submit</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_pass'>pass</span><span class='comma'>,</span> <span class='id identifier rubyid_metadata'>metadata</span><span class='comma'>,</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_construct'>construct</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span>
-                                                      <span class='kw'>nil</span><span class='comma'>,</span>
-                                                      <span class='kw'>nil</span><span class='comma'>,</span>
-                                                      <span class='id identifier rubyid_metadata'>metadata</span><span class='comma'>,</span>
-                                                      <span class='kw'>nil</span><span class='comma'>,</span>
-                                                      <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='comma'>,</span>
-                                                      <span class='kw'>nil</span><span class='rparen'>)</span>
-  <span class='comment'># puts tx_constructed.request.options[:body]
-</span>  <span class='id identifier rubyid_tx_signed'>tx_signed</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_pass'>pass</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>transaction</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='comment'># puts tx_signed
-</span>  <span class='id identifier rubyid_tx_submitted'>tx_submitted</span> <span class='op'>=</span> <span class='ivar'>@cw</span><span class='period'>.</span><span class='id identifier rubyid_shelley'>shelley</span><span class='period'>.</span><span class='id identifier rubyid_transactions'>transactions</span><span class='period'>.</span><span class='id identifier rubyid_submit'>submit</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>transaction</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='comment'># puts tx_submitted
-</span>
-  <span class='lbracket'>[</span><span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span><span class='rbracket'>]</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="mint_payload-instance_method">
-  
-    #<strong>mint_payload</strong>(asset_name, address, quantity = 1)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Build mint payload for construct tx</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-32
-33
-34
-35
-36
-37
-38</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 32</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_mint_payload'>mint_payload</span><span class='lparen'>(</span><span class='id identifier rubyid_asset_name'>asset_name</span><span class='comma'>,</span> <span class='id identifier rubyid_address'>address</span><span class='comma'>,</span> <span class='id identifier rubyid_quantity'>quantity</span> <span class='op'>=</span> <span class='int'>1</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_mint'>mint</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>operation</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>mint</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>quantity</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_quantity'>quantity</span><span class='comma'>,</span>
-                                        <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>receiving_address</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_address'>address</span> <span class='rbrace'>}</span> <span class='rbrace'>}</span><span class='comma'>,</span>
-           <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>policy_script_template</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='const'><span class='object_link'><a href="../Vendi.html" title="Vendi (module)">Vendi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Vendi.html#POLICY_SCRIPT_TEMPLATE-constant" title="Vendi::POLICY_SCRIPT_TEMPLATE (constant)">POLICY_SCRIPT_TEMPLATE</a></span></span> <span class='rbrace'>}</span>
-  <span class='id identifier rubyid_mint'>mint</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>asset_name</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_asset_name'>asset_name</span> <span class='kw'>unless</span> <span class='id identifier rubyid_asset_name'>asset_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='lbracket'>[</span><span class='id identifier rubyid_mint'>mint</span><span class='rbracket'>]</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="outgoing_tx_ok?-instance_method">
-  
-    #<strong>outgoing_tx_ok?</strong>(tx_res)  &#x21d2; <tt>Boolean</tt> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-58
-59
-60
-61</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 58</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_outgoing_tx_ok?'>outgoing_tx_ok?</span><span class='lparen'>(</span><span class='id identifier rubyid_tx_res'>tx_res</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span> <span class='op'>=</span> <span class='id identifier rubyid_tx_res'>tx_res</span>
-  <span class='id identifier rubyid_tx_constructed'>tx_constructed</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tx_signed'>tx_signed</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_tx_submitted'>tx_submitted</span><span class='period'>.</span><span class='id identifier rubyid_code'>code</span> <span class='op'>==</span> <span class='int'>202</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="prepare_metadata-instance_method">
-  
-    #<strong>prepare_metadata</strong>(nfts, key, policy_id)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-6
-7
-8
-9
-10
-11
-12
-13
-14</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 6</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_prepare_metadata'>prepare_metadata</span><span class='lparen'>(</span><span class='id identifier rubyid_nfts'>nfts</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_policy_id'>policy_id</span><span class='rparen'>)</span>
-  <span class='lbrace'>{</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>721</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span>
-      <span class='id identifier rubyid_policy_id'>policy_id</span> <span class='op'>=&gt;</span> <span class='lbrace'>{</span>
-        <span class='id identifier rubyid_key'>key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_nfts'>nfts</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span>
-      <span class='rbrace'>}</span>
-    <span class='rbrace'>}</span>
-  <span class='rbrace'>}</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="update_metadata_files-instance_method">
-  
-    #<strong>update_metadata_files</strong>(nfts, key, metadata_vending_file, metadata_sent_file)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 16</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_update_metadata_files'>update_metadata_files</span><span class='lparen'>(</span><span class='id identifier rubyid_nfts'>nfts</span><span class='comma'>,</span> <span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_metadata_vending_file'>metadata_vending_file</span><span class='comma'>,</span> <span class='id identifier rubyid_metadata_sent_file'>metadata_sent_file</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_update_metadata_files'>update_metadata_files</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_metadata_vending_file'>metadata_vending_file</span> <span class='op'>=</span> <span class='id identifier rubyid_metadata_vending_path'>metadata_vending_path</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_metadata_sent_file'>metadata_sent_file</span> <span class='op'>=</span> <span class='id identifier rubyid_metadata_sent_path'>metadata_sent_path</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
   <span class='comment'># metadata sent
-</span>  <span class='id identifier rubyid_m'>m</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_key'>key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_nfts'>nfts</span><span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+</span>  <span class='id identifier rubyid_m'>m</span> <span class='op'>=</span> <span class='id identifier rubyid_metadatas'>metadatas</span><span class='lparen'>(</span><span class='id identifier rubyid_keys'>keys</span><span class='comma'>,</span> <span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exist?'>exist?</span> <span class='id identifier rubyid_metadata_sent_file'>metadata_sent_file</span>
     <span class='id identifier rubyid_sent'>sent</span> <span class='op'>=</span> <span class='id identifier rubyid_from_json'>from_json</span><span class='lparen'>(</span><span class='id identifier rubyid_metadata_sent_file'>metadata_sent_file</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_sent'>sent</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span><span class='id identifier rubyid_m'>m</span><span class='rparen'>)</span>
@@ -515,7 +921,10 @@
     <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='id identifier rubyid_metadata_sent_file'>metadata_sent_file</span><span class='comma'>,</span> <span class='id identifier rubyid_m'>m</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='comment'># metadata available
-</span>  <span class='id identifier rubyid_nfts'>nfts</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+</span>  <span class='id identifier rubyid_nfts'>nfts</span> <span class='op'>=</span> <span class='id identifier rubyid_metadata_vending'>metadata_vending</span><span class='lparen'>(</span><span class='id identifier rubyid_collection_name'>collection_name</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_key'>key</span><span class='op'>|</span>
+    <span class='id identifier rubyid_nfts'>nfts</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
   <span class='id identifier rubyid_to_json'>to_json</span><span class='lparen'>(</span><span class='id identifier rubyid_metadata_vending_file'>metadata_vending_file</span><span class='comma'>,</span> <span class='id identifier rubyid_nfts'>nfts</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -532,22 +941,33 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>wait for NFT to be minted</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-63
-64
-65
-66
-67
-68
-69</pre>
+126
+127
+128
+129
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'lib/vendi/minter.rb', line 126</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_for_tx_in_ledger'>wait_for_tx_in_ledger</span><span class='lparen'>(</span><span class='id identifier rubyid_wid'>wid</span><span class='comma'>,</span> <span class='id identifier rubyid_tx_id'>tx_id</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_eventually'>eventually</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Tx </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tx_id'>tx_id</span><span class='embexpr_end'>}</span><span class='tstring_content'> is in ledger</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>do</span>
@@ -566,7 +986,7 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Nov  7 22:51:32 2022 by
+  Generated on Tue Nov  8 20:34:53 2022 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-3.1.2).
 </div>
