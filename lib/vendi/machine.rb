@@ -174,7 +174,12 @@ module Vendi
         nfts = metadata_vending(collection_name)
         nfts_sent = metadata_sent(collection_name)
         wallet_balance = @cw.shelley.wallets.get(wid)['balance']['available']['quantity']
-        @logger.info "Vending machine [In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Balance: #{as_ada(wallet_balance)}]"
+        @logger.info "[In stock: #{nfts.size}, Sent: #{nfts_sent.size}, NFT price: #{as_ada(price)}, Vend max: #{vend_max}, Balance: #{as_ada(wallet_balance)}]"
+        n = @cw.misc.network.information
+        unless n['sync_progress']['status'] == 'ready'
+          @logger.error "Network is not synced (#{n['sync_progress']['status']} #{n['sync_progress']['progress']['quantity']}%), waiting..."
+          sleep 5
+        end
 
         txs_new = get_incoming_txs(wid)
         if txs.size < txs_new.size

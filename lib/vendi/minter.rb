@@ -104,7 +104,7 @@ module Vendi
       c = config(collection_name)
       wid = c[:wallet_id]
       pass = c[:wallet_pass]
-      policy_id = c[:policy_id]
+      policy_id = c[:wallet_policy_id]
       price = c[:price]
       keys = keys_to_mint(tx_amt, price, vend_max, collection_name)
       @logger.info "Minting #{keys.size} NFT(s): #{keys} to #{dest_address}"
