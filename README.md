@@ -8,9 +8,6 @@
 Vendi is simple CNFT vending machine based on [`cardano-wallet`](https://github.com/input-output-hk/cardano-wallet).
 You need to have `cardano-wallet` started and synced.
 
-Check out the 
-  👉 **[Demo](http://185.201.114.10:4321)** 👈 and [how it was prepared](https://github.com/piotr-iohk/vendi/tree/master/demo#how-it-was-prepared).
-
 ## Installation
 
 **Rubygem:**
